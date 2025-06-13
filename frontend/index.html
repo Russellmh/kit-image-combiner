@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kit Includes Image Combiner</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .config-section {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 15px;
+        }
+        
+        .config-section h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .server-config {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .mode-selection {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(118, 75, 162, 0.1);
+            border-radius: 15px;
+            border: 2px solid #764ba2;
+        }
+        
+        .mode-selection h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .mode-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .mode-btn {
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            min-width: 150px;
+            text-align: center;
+        }
+        
+        .mode-btn.active {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .mode-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .upload-section {
+            margin-bottom: 30px;
+        }
+        
+        .csv-upload-section {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: rgba(40, 167, 69, 0.1);
+            border-radius: 15px;
+            border: 2px solid #28a745;
+        }
+        
+        .csv-upload-section h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .file-input {
+            position: absolute;
+            left: -9999px;
+        }
+        
+        .file-input-label {
+            display: block;
+            padding: 15px 25px;
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        
+        .file-input-label:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+        }
+        
+        .csv-info {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            border-left: 4px solid #28a745;
+        }
+        
+        .csv-preview {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            border: 2px solid #28a745;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .csv-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+        
+        .csv-table th,
+        .csv-table td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        
+        .csv-table th {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            font-weight: bold;
+        }
+        
+        .csv-table tr:nth-child(even) {
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        .text-input-wrapper {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 15px;
+            border: 2px solid #667eea;
+        }
+        
+        .input-label {
+            display: block;
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        #partNumbers {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            line-height: 1.5;
+            resize: vertical;
+            min-height: 120px;
+            transition: border-color 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        #partNumbers:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+        }
+        
+        .input-help {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .batch-processing {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: rgba(255, 193, 7, 0.1);
+            border-radius: 15px;
+            border: 2px solid #ffc107;
+        }
+        
+        .batch-processing h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .batch-progress {
+            margin-bottom: 15px;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #ddd;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #28a745, #20c997);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-text {
+            margin-top: 10px;
+            font-weight: bold;
+            text-align: center;
+            color: #333;
+        }
+        
+        .batch-results {
+            margin-top: 20px;
+        }
+        
+        .result-item {
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+        
+        .result-item.success {
+            background: rgba(40, 167, 69, 0.1);
+            border-left: 4px solid #28a745;
+        }
+        
+        .result-item.error {
+            background: rgba(220, 53, 69, 0.1);
+            border-left: 4px solid #dc3545;
+        }
+        
+        .result-item.processing {
+            background: rgba(255, 193, 7, 0.1);
+            border-left: 4px solid #ffc107;
+        }
+        
+        .preview-section {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: rgba(118, 75, 162, 0.1);
+            border-radius: 15px;
+            border: 2px solid #764ba2;
+        }
+        
+        .preview-section h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .part-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .part-item {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .part-item .remove-btn {
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            color: white;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .part-item .remove-btn:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+        
+        .images-preview {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: rgba(40, 167, 69, 0.1);
+            border-radius: 15px;
+            border: 2px solid #28a745;
+        }
+        
+        .images-preview h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .preview-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            border: 2px solid #ddd;
+            transition: all 0.3s ease;
+        }
+        
+        .preview-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .preview-item.success {
+            border-color: #28a745;
+        }
+        
+        .preview-item.error {
+            border-color: #dc3545;
+        }
+        
+        .preview-item .part-number {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 12px;
+            word-break: break-all;
+        }
+        
+        .preview-item img {
+            max-width: 100%;
+            max-height: 80px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .preview-item .error-text {
+            color: #dc3545;
+            font-size: 11px;
+            margin-top: 5px;
+        }
+        
+        .preview-item .success-indicator {
+            color: #28a745;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 15px;
+        }
+        
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        label {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        input[type="number"], input[type="text"], select {
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        
+        input[type="number"]:focus, input[type="text"]:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .output-section {
+            text-align: center;
+        }
+        
+        #outputCanvas {
+            border: 2px solid #ddd;
+            border-radius: 15px;
+            max-width: 100%;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .download-btn {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            margin-top: 15px;
+        }
+        
+        .download-btn:hover {
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            color: #dc3545;
+            margin-top: 10px;
+            font-size: 12px;
+        }
+        
+        .success-message {
+            color: #28a745;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Kit Includes Image Combiner</h1>
+        
+        <div class="config-section">
+            <h3>Server Configuration</h3>
+            <div class="server-config">
+                <div class="control-group">
+                    <label for="serverUrl">Backend Server URL:</label>
+                    <!-- CHANGE THIS TO YOUR DEPLOYED BACKEND URL -->
+                    <input type="text" id="serverUrl" value="https://your-backend-app.onrender.com" style="width: 250px;">
+                </div>
+                <button class="btn" onclick="testServer()">Test Connection</button>
+                <div id="connectionStatus"></div>
+            </div>
+        </div>
+        
+        <div class="mode-selection">
+            <h3>🔧 Processing Mode</h3>
+            <div class="mode-buttons">
+                <button class="mode-btn active" onclick="setMode('manual')" id="manualModeBtn">
+                    📝 Manual Entry<br>
+                    <small>Enter part numbers manually</small>
+                </button>
+                <button class="mode-btn" onclick="setMode('csv')" id="csvModeBtn">
+                    📊 CSV Upload<br>
+                    <small>Upload CSV with part numbers</small>
+                </button>
+            </div>
+        </div>
+        
+        <!-- CSV Upload Section -->
+        <div class="csv-upload-section hidden" id="csvSection">
+            <h3>📊 CSV File Upload</h3>
+            <div class="file-input-wrapper">
+                <input type="file" id="csvFile" class="file-input" accept=".csv" onchange="handleCsvUpload(event)">
+                <label for="csvFile" class="file-input-label">
+                    📁 Choose CSV File
+                </label>
+            </div>
+            <div class="csv-info">
+                <strong>CSV Format Requirements:</strong>
+                <ul style="margin: 10px 0; padding-left: 20px;">
+                    <li>First column: Master Part Number (used as filename)</li>
+                    <li>Next 6 columns: Component part numbers</li>
+                    <li>Headers are required</li>
+                    <li>Each row will generate a separate combined image</li>
+                </ul>
+            </div>
+            <div id="csvPreview" class="csv-preview hidden">
+                <h4>📋 CSV Preview:</h4>
+                <table class="csv-table" id="csvTable"></table>
+            </div>
+        </div>
+        
+        <!-- Manual Entry Section -->
+        <div class="upload-section" id="manualSection">
+            <div class="input-section">
+                <div class="text-input-wrapper">
+                    <label for="partNumbers" class="input-label">📝 Enter Part Numbers (up to 6, one per line):</label>
+                    <textarea id="partNumbers" placeholder="Enter part numbers here, one per line:&#10;&#10;Example:&#10;123-456-789&#10;ABC-DEF-GHI&#10;987-654-321" rows="8"></textarea>
+                    <div class="input-help">💡 Tip: You can paste multiple part numbers, separated by commas, spaces, or new lines</div>
+                </div>
+            </div>
+            
+            <div class="preview-section" id="previewSection" style="display: none;">
+                <h3>📋 Part Numbers to Process:</h3>
+                <div class="part-list" id="partList"></div>
+            </div>
+            
+            <div class="images-preview" id="imagesPreview" style="display: none;">
+                <h3>🖼️ Loaded Images:</h3>
+                <div class="preview-grid" id="previewGrid"></div>
+            </div>
+        </div>
+        
+        <!-- Batch Processing Section -->
+        <div class="batch-processing hidden" id="batchSection">
+            <h3>🔄 Batch Processing</h3>
+            <div class="batch-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text" id="progressText">Ready to process</div>
+            </div>
+            <div class="batch-results" id="batchResults"></div>
+        </div>
+        
+        <div class="controls">
+            <div class="control-group">
+                <label for="canvasWidth">Width:</label>
+                <input type="number" id="canvasWidth" value="800" min="200" max="2000">
+            </div>
+            <div class="control-group">
+                <label for="canvasHeight">Height:</label>
+                <input type="number" id="canvasHeight" value="600" min="200" max="2000">
+            </div>
+            <div class="control-group">
+                <label for="layout">Layout:</label>
+                <select id="layout">
+                    <option value="grid">Grid (Auto)</option>
+                    <option value="grid2x3">Grid (2x3)</option>
+                    <option value="grid3x2">Grid (3x2)</option>
+                    <option value="horizontal">Horizontal Row</option>
+                    <option value="vertical">Vertical Column</option>
+                </select>
+            </div>
+            
+            <!-- Manual Mode Buttons -->
+            <div id="manualControls">
+                <button class="btn" onclick="parsePartNumbers()" id="parseBtn">📋 Parse Part Numbers</button>
+                <button class="btn" onclick="loadImages()" id="loadBtn" style="display: none;">🔄 Load Images</button>
+                <button class="btn" onclick="combineImages()" id="combineBtn" style="display: none;">Combine Images</button>
+            </div>
+            
+            <!-- CSV Mode Buttons -->
+            <div id="csvControls" class="hidden">
+                <button class="btn" onclick="processCsvBatch()" id="processCsvBtn" style="display: none;">🚀 Process All Kits</button>
+                <button class="btn download-btn" onclick="downloadAllImages()" id="downloadAllBtn" style="display: none;">📦 Download All Images</button>
+            </div>
+        </div>
+        
+        <div class="output-section">
+            <canvas id="outputCanvas" style="display: none;"></canvas>
+            <br>
+            <button class="btn download-btn" id="downloadBtn" onclick="downloadImage()" style="display: none;">
+                💾 Download Combined Image
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script>
+        const images = [];
+        let parsedPartNumbers = [];
+        let csvData = [];
+        let processedImages = new Map(); // Store processed images by master part number
+        let currentMode = 'manual';
+        
+        // Setup textarea input handler
+        document.getElementById('partNumbers').addEventListener('input', function(e) {
+            // Reset everything when input changes
+            clearPreviews();
+            document.getElementById('parseBtn').style.display = 'inline-block';
+            document.getElementById('loadBtn').style.display = 'none';
+            document.getElementById('combineBtn').style.display = 'none';
+        });
+        
+        function setMode(mode) {
+            currentMode = mode;
+            
+            // Update button styles
+            document.getElementById('manualModeBtn').classList.toggle('active', mode === 'manual');
+            document.getElementById('csvModeBtn').classList.toggle('active', mode === 'csv');
+            
+            // Show/hide sections
+            document.getElementById('manualSection').classList.toggle('hidden', mode !== 'manual');
+            document.getElementById('csvSection').classList.toggle('hidden', mode !== 'csv');
+            document.getElementById('batchSection').classList.toggle('hidden', mode !== 'csv');
+            
+            // Show/hide controls
+            document.getElementById('manualControls').classList.toggle('hidden', mode !== 'manual');
+            document.getElementById('csvControls').classList.toggle('hidden', mode !== 'csv');
+            
+            // Clear data when switching modes
+            clearPreviews();
+            csvData = [];
+            processedImages.clear();
+            document.getElementById('csvPreview').classList.add('hidden');
+        }
+        
+        function handleCsvUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const csv = e.target.result;
+                
+                Papa.parse(csv, {
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: function(results) {
+                        if (results.errors.length > 0) {
+                            alert('CSV parsing errors: ' + results.errors.map(e => e.message).join(', '));
+                            return;
+                        }
+                        
+                        csvData = results.data;
+                        displayCsvPreview(csvData, results.meta.fields);
+                        
+                        if (csvData.length > 0) {
+                            document.getElementById('processCsvBtn').style.display = 'inline-block';
+                        }
+                    }
+                });
+            };
+            reader.readAsText(file);
+        }
+        
+        function displayCsvPreview(data, headers) {
+            const preview = document.getElementById('csvPreview');
+            const table = document.getElementById('csvTable');
+            
+            // Create table header
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            headers.forEach(header => {
+                const th = document.createElement('th');
+                th.textContent = header;
+                headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+            
+            // Create table body
+            const tbody = document.createElement('tbody');
+            data.slice(0, 5).forEach(row => { // Show only first 5 rows
+                const tr = document.createElement('tr');
+                headers.forEach(header => {
+                    const td = document.createElement('td');
+                    td.textContent = row[header] || '';
+                    tr.appendChild(td);
+                });
+                tbody.appendChild(tr);
+            });
+            
+            table.innerHTML = '';
+            table.appendChild(thead);
+            table.appendChild(tbody);
+            
+            if (data.length > 5) {
+                const moreRow = document.createElement('tr');
+                const moreCell = document.createElement('td');
+                moreCell.colSpan = headers.length;
+                moreCell.textContent = `... and ${data.length - 5} more rows`;
+                moreCell.style.textAlign = 'center';
+                moreCell.style.fontStyle = 'italic';
+                moreRow.appendChild(moreCell);
+                tbody.appendChild(moreRow);
+            }
+            
+            preview.classList.remove('hidden');
+        }
+        
+        async function processCsvBatch() {
+            if (csvData.length === 0) {
+                alert('No CSV data to process!');
+                return;
+            }
+            
+            const batchResults = document.getElementById('batchResults');
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            
+            batchResults.innerHTML = '';
+            processedImages.clear();
+            
+            const headers = Object.keys(csvData[0]);
+            const masterPartHeader = headers[0];
+            const componentHeaders = headers.slice(1, 7); // Next 6 columns
+            
+            progressText.textContent = `Processing ${csvData.length} kits...`;
+            
+            for (let i = 0; i < csvData.length; i++) {
+                const row = csvData[i];
+                const masterPart = row[masterPartHeader];
+                const components = componentHeaders.map(header => row[header]).filter(part => part && part.trim());
+                
+                if (!masterPart || components.length === 0) {
+                    addBatchResult(masterPart || `Row ${i + 1}`, 'error', 'No master part or components found');
+                    continue;
+                }
+                
+                addBatchResult(masterPart, 'processing', 'Processing...');
+                
+                try {
+                    const success = await processKitImages(masterPart, components);
+                    if (success) {
+                        updateBatchResult(masterPart, 'success', 'Completed successfully');
+                    } else {
+                        updateBatchResult(masterPart, 'error', 'Failed to process images');
+                    }
+                } catch (error) {
+                    updateBatchResult(masterPart, 'error', error.message);
+                }
+                
+                // Update progress
+                const progress = ((i + 1) / csvData.length) * 100;
+                progressFill.style.width = `${progress}%`;
+                progressText.textContent = `Processed ${i + 1} of ${csvData.length} kits`;
+                
+                // Small delay to prevent overwhelming the server
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+            
+            if (processedImages.size > 0) {
+                document.getElementById('downloadAllBtn').style.display = 'inline-block';
+            }
+            
+            progressText.textContent = `Completed processing ${csvData.length} kits`;
+        }
+        
+        async function processKitImages(masterPart, components) {
+            try {
+                // Load images for this kit
+                const serverUrl = document.getElementById('serverUrl').value;
+                const response = await fetch(`${serverUrl}/fetch-images`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ partNumbers: components })
+                });
+                
+                const result = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(result.error || 'Failed to fetch images');
+                }
+                
+                // Load images into memory
+                const loadedImages = [];
+                for (const imageResult of result.images) {
+                    if (imageResult.success) {
+                        const img = new Image();
+                        await new Promise((resolve, reject) => {
+                            img.onload = resolve;
+                            img.onerror = reject;
+                            img.src = `data:image/jpeg;base64,${imageResult.data}`;
+                        });
+                        loadedImages.push(img);
+                    }
+                }
+                
+                if (loadedImages.length === 0) {
+                    throw new Error('No images loaded successfully');
+                }
+                
+                // Create combined image
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const width = parseInt(document.getElementById('canvasWidth').value);
+                const height = parseInt(document.getElementById('canvasHeight').value);
+                const layout = document.getElementById('layout').value;
+                
+                canvas.width = width;
+                canvas.height = height;
+                
+                // Clear canvas with white background
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, width, height);
+                
+                // Draw header
+                const headerHeight = 60;
+                ctx.fillStyle = '#69141e';
+                ctx.font = 'bold 36px "Oswald", Arial, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('KIT INCLUDES:', width / 2, 45);
+                
+                // Calculate available space for images
+                const availableHeight = height - headerHeight - 20;
+                const startY = headerHeight + 10;
+                
+                // Draw images based on layout
+                if (layout === 'grid') {
+                    drawGridLayout(ctx, loadedImages, 10, startY, width - 20, availableHeight);
+                } else if (layout === 'grid2x3') {
+                    drawFixedGridLayout(ctx, loadedImages, 10, startY, width - 20, availableHeight, 2, 3);
+                } else if (layout === 'grid3x2') {
+                    drawFixedGridLayout(ctx, loadedImages, 10, startY, width - 20, availableHeight, 3, 2);
+                } else if (layout === 'horizontal') {
+                    drawHorizontalLayout(ctx, loadedImages, 10, startY, width - 20, availableHeight);
+                } else if (layout === 'vertical') {
+                    drawVerticalLayout(ctx, loadedImages, 10, startY, width - 20, availableHeight);
+                }
+                
+                // Store the processed image
+                const imageData = canvas.toDataURL('image/png');
+                processedImages.set(masterPart, imageData);
+                
+                return true;
+            } catch (error) {
+                console.error('Error processing kit:', masterPart, error);
+                return false;
+            }
+        }
+        
+        function addBatchResult(masterPart, status, message) {
+            const batchResults = document.getElementById('batchResults');
+            const resultItem = document.createElement('div');
+            resultItem.className = `result-item ${status}`;
+            resultItem.id = `result-${masterPart.replace(/[^a-zA-Z0-9]/g, '_')}`;
+            
+            const statusIcon = status === 'success' ? '✅' : status === 'error' ? '❌' : '⏳';
+            resultItem.innerHTML = `
+                <span><strong>${masterPart}</strong>: ${message}</span>
+                <span>${statusIcon}</span>
+            `;
+            
+            batchResults.appendChild(resultItem);
+        }
+        
+        function updateBatchResult(masterPart, status, message) {
+            const resultId = `result-${masterPart.replace(/[^a-zA-Z0-9]/g, '_')}`;
+            const resultItem = document.getElementById(resultId);
+            
+            if (resultItem) {
+                resultItem.className = `result-item ${status}`;
+                const statusIcon = status === 'success' ? '✅' : status === 'error' ? '❌' : '⏳';
+                resultItem.innerHTML = `
+                    <span><strong>${masterPart}</strong>: ${message}</span>
+                    <span>${statusIcon}</span>
+                `;
+            }
+        }
+        
+        function downloadAllImages() {
+            if (processedImages.size === 0) {
+                alert('No processed images to download!');
+                return;
+            }
+            
+            processedImages.forEach((imageData, masterPart) => {
+                const link = document.createElement('a');
+                link.download = `${sanitizeFilename(masterPart)}.png`;
+                link.href = imageData;
+                link.click();
+                
+                // Small delay between downloads
+                setTimeout(() => {}, 100);
+            });
+        }
+        
+        function sanitizeFilename(filename) {
+            return filename.replace(/[^a-zA-Z0-9-_]/g, '_');
+        }
+        
+        function clearPreviews() {
+            images.length = 0;
+            parsedPartNumbers = [];
+            document.getElementById('previewSection').style.display = 'none';
+            document.getElementById('imagesPreview').style.display = 'none';
+            updateCombineButton();
+        }
+        
+        function parsePartNumbers() {
+            const textarea = document.getElementById('partNumbers');
+            const input = textarea.value.trim();
+            
+            if (!input) {
+                alert('Please enter at least one part number!');
+                return;
+            }
+            
+            // Parse input - handle newlines, commas, semicolons, and spaces
+            const parts = input
+                .split(/[\n,;|\s]+/)
+                .map(part => part.trim())
+                .filter(part => part.length > 0)
+                .slice(0, 6); // Limit to 6 parts
+            
+            if (parts.length === 0) {
+                alert('No valid part numbers found!');
+                return;
+            }
+            
+            if (parts.length > 6) {
+                alert('Maximum 6 part numbers allowed. Using first 6.');
+            }
+            
+            parsedPartNumbers = parts;
+            displayParsedParts();
+            
+            document.getElementById('parseBtn').style.display = 'none';
+            document.getElementById('loadBtn').style.display = 'inline-block';
+        }
+        
+        function displayParsedParts() {
+            const previewSection = document.getElementById('previewSection');
+            const partList = document.getElementById('partList');
+            
+            partList.innerHTML = '';
+            
+            parsedPartNumbers.forEach((part, index) => {
+                const partItem = document.createElement('div');
+                partItem.className = 'part-item';
+                partItem.innerHTML = `
+                    <span>${part}</span>
+                    <button class="remove-btn" onclick="removePart(${index})" title="Remove this part">×</button>
+                `;
+                partList.appendChild(partItem);
+            });
+            
+            previewSection.style.display = 'block';
+        }
+        
+        function removePart(index) {
+            parsedPartNumbers.splice(index, 1);
+            
+            if (parsedPartNumbers.length === 0) {
+                document.getElementById('previewSection').style.display = 'none';
+                document.getElementById('parseBtn').style.display = 'inline-block';
+                document.getElementById('loadBtn').style.display = 'none';
+            } else {
+                displayParsedParts();
+            }
+            
+            // Clear loaded images as the part list changed
+            images.length = 0;
+            document.getElementById('imagesPreview').style.display = 'none';
+            updateCombineButton();
+        }
+        
+        async function testServer() {
+            const serverUrl = document.getElementById('serverUrl').value;
+            const statusDiv = document.getElementById('connectionStatus');
+            
+            try {
+                statusDiv.innerHTML = '<div class="loading"></div>';
+                const response = await fetch(`${serverUrl}/health`);
+                
+                if (response.ok) {
+                    statusDiv.innerHTML = '<span class="success-message">✅ Connected</span>';
+                } else {
+                    statusDiv.innerHTML = '<span class="error-message">❌ Server Error</span>';
+                }
+            } catch (error) {
+                statusDiv.innerHTML = '<span class="error-message">❌ Connection Failed</span>';
+            }
+        }
+        
+        async function loadImages() {
+            if (parsedPartNumbers.length === 0) {
+                alert('Please parse part numbers first!');
+                return;
+            }
+            
+            const serverUrl = document.getElementById('serverUrl').value;
+            const loadBtn = document.getElementById('loadBtn');
+            
+            loadBtn.disabled = true;
+            loadBtn.innerHTML = 'Loading... <div class="loading"></div>';
+            
+            // Clear previous images
+            images.length = 0;
+            
+            try {
+                const response = await fetch(`${serverUrl}/fetch-images`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ partNumbers: parsedPartNumbers })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    displayImageResults(result.images);
+                    updateCombineButton();
+                } else {
+                    alert('Server error: ' + result.error);
+                }
+            } catch (error) {
+                alert('Network error: ' + error.message);
+            }
+            
+            loadBtn.disabled = false;
+            loadBtn.innerHTML = '🔄 Load Images';
+        }
+        
+        function displayImageResults(imageResults) {
+            const imagesPreview = document.getElementById('imagesPreview');
+            const previewGrid = document.getElementById('previewGrid');
+            
+            previewGrid.innerHTML = '';
+            
+            imageResults.forEach((result, index) => {
+                const previewItem = document.createElement('div');
+                previewItem.className = `preview-item ${result.success ? 'success' : 'error'}`;
+                
+                if (result.success) {
+                    const img = new Image();
+                    img.onload = function() {
+                        images[index] = img;
+                        updateCombineButton();
+                    };
+                    img.src = `data:image/jpeg;base64,${result.data}`;
+                    
+                    previewItem.innerHTML = `
+                        <div class="success-indicator">✅</div>
+                        <div class="part-number">${result.partNumber}</div>
+                        <img src="data:image/jpeg;base64,${result.data}" alt="${result.partNumber}">
+                    `;
+                } else {
+                    previewItem.innerHTML = `
+                        <div class="success-indicator" style="color: #dc3545;">❌</div>
+                        <div class="part-number">${result.partNumber}</div>
+                        <div class="error-text">${result.error}</div>
+                    `;
+                }
+                
+                previewGrid.appendChild(previewItem);
+            });
+            
+            imagesPreview.style.display = 'block';
+        }
+        
+        function updateCombineButton() {
+            const loadedImages = images.filter(img => img);
+            const combineBtn = document.getElementById('combineBtn');
+            if (loadedImages.length > 0) {
+                combineBtn.style.display = 'inline-block';
+            } else {
+                combineBtn.style.display = 'none';
+            }
+        }
+        
+        function combineImages() {
+            const loadedImages = images.filter(img => img);
+            if (loadedImages.length === 0) {
+                alert('No images loaded! Please load images first.');
+                return;
+            }
+            
+            const canvas = document.getElementById('outputCanvas');
+            const ctx = canvas.getContext('2d');
+            const width = parseInt(document.getElementById('canvasWidth').value);
+            const height = parseInt(document.getElementById('canvasHeight').value);
+            const layout = document.getElementById('layout').value;
+            
+            canvas.width = width;
+            canvas.height = height;
+            
+            // Clear canvas with white background
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, width, height);
+            
+            // Draw header
+            const headerHeight = 60;
+            ctx.fillStyle = '#69141e';
+            ctx.font = 'bold 36px "Oswald", Arial, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('KIT INCLUDES:', width / 2, 45);
+            
+            // Calculate available space for images
+            const availableHeight = height - headerHeight - 20;
+            const startY = headerHeight + 10;
+            
+            // Draw images based on layout
+            if (layout === 'grid') {
+                drawGridLayout(ctx, loadedImages, 10, startY, width - 20, availableHeight);
+            } else if (layout === 'grid2x3') {
+                drawFixedGridLayout(ctx, loadedImages, 10, startY, width - 20, availableHeight, 2, 3);
+            } else if (layout === 'grid3x2') {
+                drawFixedGridLayout(ctx, loadedImages, 10, startY, width - 20, availableHeight, 3, 2);
+            } else if (layout === 'horizontal') {
+                drawHorizontalLayout(ctx, loadedImages, 10, startY, width - 20, availableHeight);
+            } else if (layout === 'vertical') {
+                drawVerticalLayout(ctx, loadedImages, 10, startY, width - 20, availableHeight);
+            }
+            
+            canvas.style.display = 'block';
+            document.getElementById('downloadBtn').style.display = 'inline-block';
+        }
+        
+        function drawGridLayout(ctx, images, x, y, w, h) {
+            const cols = Math.ceil(Math.sqrt(images.length));
+            const rows = Math.ceil(images.length / cols);
+            const cellW = w / cols;
+            const cellH = h / rows;
+            const padding = 10;
+            
+            images.forEach((img, index) => {
+                const row = Math.floor(index / cols);
+                const col = index % cols;
+                const cellX = x + col * cellW + padding;
+                const cellY = y + row * cellH + padding;
+                const drawW = cellW - padding * 2;
+                const drawH = cellH - padding * 2;
+                
+                drawImageFit(ctx, img, cellX, cellY, drawW, drawH);
+            });
+        }
+        
+        function drawFixedGridLayout(ctx, images, x, y, w, h, cols, rows) {
+            const cellW = w / cols;
+            const cellH = h / rows;
+            const padding = 10;
+            
+            images.forEach((img, index) => {
+                if (index >= cols * rows) return; // Skip if we exceed grid capacity
+                
+                const row = Math.floor(index / cols);
+                const col = index % cols;
+                const cellX = x + col * cellW + padding;
+                const cellY = y + row * cellH + padding;
+                const drawW = cellW - padding * 2;
+                const drawH = cellH - padding * 2;
+                
+                drawImageFit(ctx, img, cellX, cellY, drawW, drawH);
+            });
+        }
+        
+        function drawHorizontalLayout(ctx, images, x, y, w, h) {
+            const cellW = w / images.length;
+            const padding = 10;
+            
+            images.forEach((img, index) => {
+                const cellX = x + index * cellW + padding;
+                const drawW = cellW - padding * 2;
+                
+                drawImageFit(ctx, img, cellX, y + padding, drawW, h - padding * 2);
+            });
+        }
+        
+        function drawVerticalLayout(ctx, images, x, y, w, h) {
+            const cellH = h / images.length;
+            const padding = 10;
+            
+            images.forEach((img, index) => {
+                const cellY = y + index * cellH + padding;
+                const drawH = cellH - padding * 2;
+                
+                drawImageFit(ctx, img, x + padding, cellY, w - padding * 2, drawH);
+            });
+        }
+        
+        function drawImageFit(ctx, img, x, y, maxW, maxH) {
+            const imgRatio = img.width / img.height;
+            const maxRatio = maxW / maxH;
+            
+            let drawW, drawH;
+            if (imgRatio > maxRatio) {
+                drawW = maxW;
+                drawH = maxW / imgRatio;
+            } else {
+                drawH = maxH;
+                drawW = maxH * imgRatio;
+            }
+            
+            const drawX = x + (maxW - drawW) / 2;
+            const drawY = y + (maxH - drawH) / 2;
+            
+            ctx.drawImage(img, drawX, drawY, drawW, drawH);
+        }
+        
+        function downloadImage() {
+            const canvas = document.getElementById('outputCanvas');
+            const link = document.createElement('a');
+            link.download = 'kit-includes-combined.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+        
+        // Test connection on page load - but only if we have a real URL
+        window.addEventListener('load', () => {
+            const serverUrl = document.getElementById('serverUrl').value;
+            if (!serverUrl.includes('your-backend-app')) {
+                setTimeout(testServer, 1000);
+            }
+        });
+    </script>
+</body>
+</html>
